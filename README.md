@@ -5,7 +5,7 @@ Collects information in the simple and readable way about your Mac.
 ## Usage
 
 ```bash
-sh <(curl -s https://raw.githubusercontent.com/fs/mac-profile/master/collect)
+bash <(curl -s https://raw.githubusercontent.com/fs/mac-profile/master/collect)
 ```
 
 ### Output
