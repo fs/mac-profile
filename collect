@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+system_profiler SPHardwareDataType SPStorageDataType -detailLevel mini \
+  | grep -E '(Model Identifier|Processor Name|Processor Speed|Memory|Capacity|Medium Type)' \
+  | sed -e 's/^[[:space:]]*//'
