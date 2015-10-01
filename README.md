@@ -17,4 +17,7 @@ Processor Speed: 2,6 GHz
 Memory: 16 GB
 Capacity: 249,82 GB (249 821 663 232 bytes)
 Medium Type: SSD
+Chipset Model: Intel HD Graphics 3000
+Resolution: 1920 x 1080 @ 60 Hz
+Display: Acer G236HL
 ```
