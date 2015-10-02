@@ -2,7 +2,7 @@
 
 attributes=(
   'Model Identifier' 'Processor Name' 'Processor Speed' 'Memory'
-  'Capacity' 'Media Name' 'Medium Type' 'Protocol'
+  'Capacity' 'Media Name' 'Medium Type' 'Protocol' ''
 )
 
 re_attributes=$(printf "|%s" "${attributes[@]}")
@@ -10,3 +10,11 @@ re_attributes=$(printf "|%s" "${attributes[@]}")
 system_profiler SPHardwareDataType SPStorageDataType -detailLevel mini \
   | grep -E "'$re_attributes'" \
   | sed -e 's/^[[:space:]]*//'
+
+system_profiler SPDisplaysDataType -xml -detailLevel mini > display_info.plist
+
+ruby -e '`gem list -i \"^plist$\"`.chomp=="true" or `gem install plist`'
+
+ruby -r './lib/plist_parser.rb' -e 'PlistParser.new.print'
+
+rm display_info.plist
