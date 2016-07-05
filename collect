@@ -1,12 +1,50 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
 
-attributes=(
-  'Model Identifier' 'Processor Name' 'Processor Speed' 'Memory'
-  'Capacity' 'Media Name' 'Medium Type' 'Protocol'
-)
+require "rexml/document"
 
-re_attributes=$(printf "|%s" "${attributes[@]}")
+class SystemInformation
+  attr_reader :xml_source
 
-system_profiler SPHardwareDataType SPStorageDataType -detailLevel mini \
-  | grep -E "'$re_attributes'" \
-  | sed -e 's/^[[:space:]]*//'
+  def initialize(xml_source)
+    @xml_source = xml_source
+  end
+
+  def [](key)
+    xml.get_elements("//key[text() = '#{key}']/following-sibling::*[1]").first.text
+  end
+
+  private
+
+  def xml
+    @xml ||= REXML::Document.new(xml_source)
+  end
+end
+
+class Collect
+  attr_reader :keys, :system
+
+  def initialize(keys, system)
+    @keys = keys
+    @system = system
+  end
+
+  def print
+    keys.each do |key|
+      puts "#{titleize(key)}: #{system[key]}"
+    end
+  end
+
+  private
+
+  def titleize(string)
+   string.split("_").map(&:capitalize).join(" ")
+  end
+end
+
+profiler = "system_profiler SPHardwareDataType SPStorageDataType -detailLevel basic -xml"
+keys = %w(machine_model cpu_type current_processor_speed physical_memory serial_number device_name medium_type size_in_bytes)
+
+system = SystemInformation.new(`#{profiler}`)
+collect = Collect.new(keys, system)
+
+collect.print
